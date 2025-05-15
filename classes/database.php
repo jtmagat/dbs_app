@@ -30,6 +30,16 @@ class database{
             //reverts any chnages made during the transaction. This keeps the database clean and consistent in case of an error
             $con->rollBack();
             return false;
+
         }
+       
     }
+     function isUsernameExists($username){
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT COUNT(*) FROM Admin WHERE admin_username = ?");
+         $stmt->execute([$username]);
+         $count = $stmt->fetchColumn();
+         return $count > 0;
+            
+        }
 }
