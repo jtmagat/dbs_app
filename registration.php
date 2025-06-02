@@ -1,47 +1,46 @@
 <?php
-    require_once('classes/database.php');
-    $con = new database();
  
-    $sweetAlertConfig = "";
+require_once('classes/database.php');
+$con = new database();
  
-    if (isset($_POST['register'])){
-     
-      $username = $_POST['username'];
-      $email = $_POST['email'];
-      $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-      $firstname = $_POST['first_name'];
-      $lastname = $_POST['last_name'];
+$sweetAlertConfig = "";
+if (isset($_POST['register'])){
+  $username = $_POST['username'];
+  $email = $_POST['email'];
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+  $firstname = $_POST['first_name'];
+  $lastname = $_POST['last_name'];
  
-      $userID = $con->signupUser($firstname, $lastname, $username, $email, $password);
-     
-      if ($userID) {
-        $sweetAlertConfig = "
-        <script>
-        Swal.fire({
-          icon: 'success',
-          title: 'Registration Successful',
-          text: 'You have successfully registered as an admin.',
-          confirmButtonText: 'OK'
-        }).then(() => {
-          window.location.href = 'login.php';
-        });
-        </script>
-        ";
-      } else {
-        $sweetAlertConfig = "
-         <script>
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: 'An error occurred during registration. Please try again.',
-          confirmButtonText: 'OK'
-        });
-        </script>"
-       
-        ;
-      }
-    }
+  $userID = $con->signupUser($firstname, $lastname, $username, $email, $password);
+ 
+  if ($userID){
+    $sweetAlertConfig = "
+    <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Registration Successful',
+      text: 'You have successfully registered as a an admin.',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      window.location.href = 'login.php'
+    });
+    </script>";
+   
+  }else{
+    $sweetAlertConfig = "
+    <script>
+    Swal.fire({
+      icon: 'error',
+      title: 'Registration Failed',
+      text: 'An error occured during registration. Please try again.',
+      confirmButtonText: 'OK'
+    });
+    </script>";
+  }
+}
+ 
 ?>
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,36 +56,42 @@
     <form id="registrationForm" method="POST" action="" class="bg-white p-4 rounded shadow-sm">
       <div class="mb-3">
         <label for="first_name" class="form-label">First Name</label>
-        <input type="text" name="first_name" id="first_name" class="form-control" placeholder="Enter your first name" required>
+        <input type="text" name="first_name" id="first_name" class="form-control"
+        placeholder="Enter your first name" required>
         <div class="invalid-feedback">First name is required.</div>
       </div>
       <div class="mb-3">
         <label for="last_name" class="form-label">Last Name</label>
-        <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Enter your last name" required>
+        <input type="text" name="last_name" id="last_name" class="form-control"
+        placeholder="Enter your last name" required>
         <div class="invalid-feedback">Last name is required.</div>
       </div>
       <div class="mb-3">
         <label for="username" class="form-label">Username</label>
-        <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required>
+        <input type="text" name="username" id="username" class="form-control"
+        placeholder="Enter your username" required>
         <div class="invalid-feedback">Username is required.</div>
       </div>
-       <div class="mb-3">
+      <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
-        <div class="invalid-feedback">Email is required.</div>
+        <input type="email" name="email" id="email" class="form-control"
+        placeholder="Enter your Email" required>
+        <div class="invalid-feedback">Email is required</div>
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+        <input type="password" name="password" id="password" class="form-control"
+        placeholder="Enter your password" required>
         <div class="invalid-feedback">Password must be at least 6 characters long, include an uppercase letter, a number, and a special character.</div>      
       </div>
-      <button type="submit" id="registerButton" name="register" class="btn btn-primary w-100">Register</button>
+      <button id= "registerButton" type="submit" name="register" class="btn btn-primary w-100">Register</button>
+     
     </form>
   </div>
  
   <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
   <script src="./package/dist/sweetalert2.js"></script>
-  <?php echo $sweetAlertConfig; ?>
+  <?php echo $sweetAlertConfig?>
   <script>
   // Function to validate individual fields
   function validateField(field, validationFn) {
@@ -149,8 +154,8 @@
         });
     });
   };
-   // Real-time username validation using AJAX
-   const checkEmailAvailability = (emailField) => {
+ 
+  const checkEmailAvailability = (emailField) => {
     emailField.addEventListener('input', () => {
       const email = emailField.value.trim();
  
@@ -201,17 +206,16 @@
   // Attach real-time validation to each field
   validateField(firstName, isNotEmpty);
   validateField(lastName, isNotEmpty);
-  validateField(password, isPasswordValid);
   checkUsernameAvailability(username);
   checkEmailAvailability(email);
+  validateField(password, isPasswordValid);
+ 
  
   // Form submission validation
   document.getElementById('registrationForm').addEventListener('submit', function (e) {
-   // e.preventDefault(); // Prevent form submission for validation
  
     let isValid = true;
  
-    // Validate all fields on submit
     [firstName, lastName, username, email, password].forEach((field) => {
       if (!field.classList.contains('is-valid')) {
         field.classList.add('is-invalid');
@@ -219,7 +223,6 @@
       }
     });
  
-    // If all fields are valid, submit the form
     if (isValid) {
       this.submit();
     }
@@ -229,5 +232,4 @@
  
 </body>
 </html>
- 
  
